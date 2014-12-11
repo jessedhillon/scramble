@@ -17,14 +17,24 @@ body {
 }
 
 #main {
+    display: -webkit-flex;
+    display: -webkit-box;
+
     flex-direction: column;
     display: flex;
     height: 100vh;
     justify-content: center;
     align-items: center;
+
+    -webkit-flex-direction: column;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
 }
 
 .board {
+    display: -webkit-flex;
+    display: -webkit-box;
+
     display: flex;
     height: 80px;
 
@@ -43,6 +53,9 @@ body {
 }
 
 .tile {
+    display: -webkit-flex;
+    display: -webkit-box;
+
     cursor: pointer;
     display: flex;
     width: 80px;
@@ -50,6 +63,9 @@ body {
     align-items: center;
     border-radius: 6px;
     margin: 0 2px;
+
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
 
     .face {
         font-weight: bold;
