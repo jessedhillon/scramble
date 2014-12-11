@@ -2,3 +2,39 @@ body {
     color: #333;
     background-color: #eee;
 }
+
+.board {
+    display: flex;
+    height: 80px;
+}
+
+.tile {
+    display: flex;
+    flex-basis: 80px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    border: 1px solid #999;
+    margin: 0 2px;
+
+    .face {
+        font-weight: bold;
+        font-size: 55px;
+    }
+}
+
+.tile.unplaced {
+    background-color: #aaa;
+
+    .face {
+        color: #666;
+    }
+}
+
+.tile.placed {
+    background-color: orange;
+
+    .face {
+        color: #333;
+    }
+}

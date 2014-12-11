@@ -16,8 +16,10 @@ function ScrambleController($scope, $document) {
 
     function guessLetter(c) {
         var unplaced = $scope.tiles.filter(isUnplaced);
-        if(unplaced.contains(c, tileLetter)) {
-            var index = unplaced.indexOf(c, tileLetter);
+        var letters = unplaced.map(tileLetter);
+
+        if(letters.contains(c)) {
+            var index = letters.indexOf(c);
             var t = unplaced[index];
 
             if(!t.placed) {
