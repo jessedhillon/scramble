@@ -3,7 +3,7 @@
 {% block title %}Opendoor Scramble{% endblock title %}
 
 {% block content %}
-    <div ng-controller="ScrambleController">
+    <div ng-controller="ScrambleController" id="main">
         <section id="board" class="board">
             <div class="tile placed" ng-repeat="tile in attempts track by $index">
                 <span class="face">{[{ tile.letter }]}</span>
@@ -11,7 +11,9 @@
             <div class="tile unplaced" ng-repeat="tile in tiles | filter:isUnplaced track by $index">
                 <span class="face">{[{ tile.letter }]}</span>
             </div>
-            <h1 ng-show="isCorrect">&#x1f44d;</h1>
+        </section>
+        <section id="result">
+            <h1 class="correct icon" ng-visible="isCorrect">&#x1f44d;</h1>
         </section>
     </div>
 {% endblock content %}

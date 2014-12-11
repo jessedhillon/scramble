@@ -1,6 +1,18 @@
+$light: #d4f99c;
+$medium: #8ba367;
+$dark: #434f32;
+
 body {
     color: #333;
-    background-color: #eee;
+    background-color: $light;
+}
+
+#main {
+    flex-direction: column;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
 }
 
 .board {
@@ -10,31 +22,51 @@ body {
 
 .tile {
     display: flex;
-    flex-basis: 80px;
+    width: 80px;
     justify-content: center;
     align-items: center;
     border-radius: 6px;
-    border: 1px solid #999;
     margin: 0 2px;
 
     .face {
         font-weight: bold;
         font-size: 55px;
     }
-}
 
-.tile.unplaced {
-    background-color: #aaa;
+    &.unplaced {
+        background-color: #aaa;
+        opacity: 0.45;
 
-    .face {
-        color: #666;
+        .face {
+            color: #666;
+        }
+    }
+
+    &.placed {
+        background-color: $dark;
+
+        .face {
+            color: $medium;
+        }
     }
 }
 
-.tile.placed {
-    background-color: orange;
-
-    .face {
-        color: #333;
+#result {
+    .icon {
+        $iconSize: 60px;
+        height: $iconSize;
+        width: $iconSize;
+        line-height: $iconSize;
+        border-radius: $iconSize/2;
+        text-align: center;
     }
+
+    .correct {
+        background-color: $dark;
+        color: $light;
+    }
+}
+
+.tile, #result .icon {
+    border: 1px solid #999;
 }
