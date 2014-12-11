@@ -3,6 +3,7 @@ from pyramid_beaker import session_factory_from_settings
 from sqlalchemy import engine_from_config
 
 import scramble.models as models
+import scramble.dictionary as dictionary
 
 
 def main(global_config, **settings):
@@ -22,12 +23,18 @@ def main(global_config, **settings):
     config.include('pyramid_jinja2')
     config.include('pyramid_scss')
 
+    dictionary.load_words(settings['scramble.dictionary'])
+
     config.add_static_view('static', 'scramble:static', cache_max_age=3600)
 
     # entity
     config.add_route('home', '/')
     config.add_view(route_name='home', view='scramble.controllers.home.index',
                     renderer='/home/index.jinja2', request_method='GET')
+
+    config.add_route('word', '/word')
+    config.add_view(route_name='word', view='scramble.controllers.dictionary.get_word',
+                    renderer='json', request_method='GET')
 
     # scss
     config.add_route('css', '/css/{css_path}.css')
