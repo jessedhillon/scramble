@@ -75,10 +75,12 @@ body {
     }
 
     &.unplaced {
+        box-shadow: inset 1px 1px 0px $dark;
         background-color: $medium;
 
         .face {
             color: $light;
+            text-shadow: 1px 1px $dark;
         }
     }
 
@@ -109,7 +111,6 @@ body {
 }
 
 .tile, #result .icon {
-    border: 1px solid $medium;
 }
 
 @-webkit-keyframes shake {
