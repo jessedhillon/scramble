@@ -7,6 +7,10 @@ body {
     background-color: $light;
 }
 
+.ng-invisible {
+    visibility: hidden;
+}
+
 #main {
     flex-direction: column;
     display: flex;
