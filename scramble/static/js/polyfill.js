@@ -1,4 +1,4 @@
-if(typeof Array.prototype.shuffle == "undefined") {
+if(Array.prototype.shuffle === undefined) {
     Array.prototype.shuffle = function() {
         var counter = this.length;
 
