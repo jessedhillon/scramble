@@ -37,7 +37,6 @@ function ScrambleController($rootScope, $scope, $document, $timeout, Dictionary)
             $scope.word = response.word;
             $scope.ready = true;
             $scope.isCorrect = false;
-            console.log($scope.word);
         });
     }
 
