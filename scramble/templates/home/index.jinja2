@@ -1,0 +1,13 @@
+{% extends "/layout.jinja2" %}
+
+{% block title %}Opendoor Scramble{% endblock title %}
+
+{% block content %}
+    <div ng-controller="ScrambleController">
+        <section id="board">
+            <a class="tile placed" ng-repeat="tile in attempts track by $index">{[{ tile.letter }]}</a>
+            <a class="tile unplaced" ng-repeat="tile in tiles | filter:isUnplaced track by $index">{[{ tile.letter }]}</a>
+            <h1 ng-show="isCorrect">&#x1f44d;</h1>
+        </section>
+    </div>
+{% endblock content %}
