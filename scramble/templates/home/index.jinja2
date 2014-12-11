@@ -4,9 +4,9 @@
 
 {% block content %}
     <div ng-controller="ScrambleController" id="main">
-        <board word="word" on-complete="onComplete()"></board>
+        <board id="board" word="word" on-ready="onReady()" on-complete="onComplete()" on-error="onError()"></board>
         <section id="result">
-            <h1 class="correct icon ng-invisible" ng-visible="isCorrect">&#x1f44d;</h1>
+            <h1 class="correct icon ng-invisible spin-in blow-out" ng-visible="isCorrect">&#x1f44d;</h1>
         </section>
     </div>
 {% endblock content %}

@@ -1,43 +1,63 @@
-var scramble = angular.module('scramble', []);
+var scramble = angular.module('scramble', ['ngAnimate']);
 
 // https://gist.github.com/c0bra/5859295
-scramble.directive('ngVisible', function() {
-    return function (scope, element, attr) {
-        scope.$watch(attr.ngVisible, function(visible) {
+scramble.directive('ngVisible', ['$animate', function($animate) {
+    return function ($scope, $element, $attr) {
+        $scope.$watch($attr.ngVisible, function(visible) {
             if(visible) {
-                element.removeClass('ng-invisible');
+                $animate.removeClass($element, 'ng-invisible');
+                // $element.removeClass('ng-invisible');
+                // $animate.enter($element);
             } else {
-                element.addClass('ng-invisible');
+                $animate.addClass($element, 'ng-invisible');
+                // $element.addClass('ng-invisible');
+                // $animate.leave($element);
             }
         });
     };
-});
+}]);
 
-function DictionaryFactory($http) {
+scramble.factory('Dictionary', ['$http',
+function($http) {
     return {
         getWord: function() {
             return $http.get('/word');
         }
     };
-}
+}]);
 
+scramble.controller('ScrambleController', ['$rootScope', '$scope', '$document', '$timeout', 'Dictionary',
 function ScrambleController($rootScope, $scope, $document, $timeout, Dictionary) {
     $scope.word = null;
+    $scope.ready = false;
     $scope.isCorrect = false;
 
     function getNextWord() {
         return Dictionary.getWord().success(function(response) {
             $scope.word = response.word;
+            $scope.ready = true;
+            $scope.isCorrect = false;
+            console.log($scope.word);
         });
     }
 
     $scope.onComplete = function() {
         $scope.isCorrect = true;
+        $scope.ready = false;
         $timeout(function() {
             getNextWord().then(function() {
                 $scope.isCorrect = false;
+                $scope.ready = true;
             });
         }, 1200);
+    };
+
+    $scope.onReady = function() {
+        $scope.ready = true;
+    };
+
+    $scope.onError = function() {
+        $scope.ready = false;
     };
 
     $document.bind('keydown', function($ev) {
@@ -47,7 +67,7 @@ function ScrambleController($rootScope, $scope, $document, $timeout, Dictionary)
             }
 
             $ev.preventDefault();
-            if($scope.isCorrect) {
+            if(!$scope.ready) {
                 return; // don't handle keystrokes until we reset
             }
 
@@ -61,11 +81,7 @@ function ScrambleController($rootScope, $scope, $document, $timeout, Dictionary)
     });
 
     getNextWord();
-}
-
-scramble.controller('ScrambleController', ['$rootScope', '$scope', '$document', '$timeout', 'Dictionary',
-                    ScrambleController]);
-scramble.factory('Dictionary', ['$http', DictionaryFactory]);
+}]);
 
 scramble.directive('tile', function() {
     return {
@@ -79,28 +95,30 @@ scramble.directive('tile', function() {
     };
 });
 
-scramble.directive('board', function() {
+scramble.directive('board', ["$timeout", function($timeout) {
     return {
         restrict: 'E',
-        template: '<section class="board">' +
+        template: '<section class="board" ng-class="{error: hasError}">' +
                     '<tile letter="tile.letter" placed="tile.placed" ng-repeat="tile in attempts track by $index"></tile>' +
                     '<tile letter="tile.letter" placed="tile.placed" ng-repeat="tile in tiles | filter:isUnplaced track by $index"></tile>' +
                   '</section>',
         scope: {
             word: '=',
             onComplete: '&',
+            onError: '&',
+            onReady: '&'
         },
         link: function($scope) {
             var _word;
 
             $scope.attempts = [];
             $scope.isCorrect = false;
+            $scope.hasError = false;
 
             $scope.$watch('word', function(w, old) {
                 if(w) {
                     _word = $scope.word.toUpperCase();
-                    $scope.tiles = _word.split('').shuffle().map(makeTile);
-                    $scope.attempts = [];
+                    reset();
                 }
             });
 
@@ -142,9 +160,24 @@ scramble.directive('board', function() {
                 }
             }
 
+            function reset() {
+                $scope.tiles = _word.split('').shuffle().map(makeTile);
+                $scope.attempts = [];
+                $scope.onReady();
+            }
+
             function validateAttempt() {
                 if(_word == $scope.attempts.map(getTileLetter).join('')) {
                     $scope.onComplete();
+                } else {
+                    if(_word.length == $scope.attempts.length) {
+                        $scope.hasError = true;
+                        $timeout(function() {
+                            $scope.hasError = false;
+                            $scope.onError();
+                            reset();
+                        }, 800);
+                    }
                 }
             }
 
@@ -168,4 +201,4 @@ scramble.directive('board', function() {
             $scope.isUnplaced = isUnplaced;
         }
     };
-});
+}]);
