@@ -26,7 +26,9 @@ body {
     justify-content: center;
     align-items: center;
 
+    -webkit-box-orient: vertical;
     -webkit-flex-direction: column;
+    -webkit-flex-flow: column no-wrap;
     -webkit-box-pack: center;
     -webkit-box-align: center;
 }
@@ -131,11 +133,13 @@ body {
 .spin-in.ng-invisible-remove {
     opacity: 0.0;
     transform: rotateZ(270deg) scale(12.0);
+    -webkit-transform: rotateZ(270deg) scale(12.0);
 }
 
 .spin-in.ng-invisible-remove-active {
     opacity: 1.0;
     transform: rotateZ(0deg) scale(1.0);
+    -webkit-transform: rotateZ(0deg) scale(1.0);
 }
 
 .blow-out.ng-invisible-add {
@@ -145,12 +149,12 @@ body {
 .blow-out.ng-invisible-add-active {
     opacity: 0.0;
     transform: scale(8.0);
+    -webkit-transform: scale(8.0);
 }
 
 @media (max-width: 768px) {
     .tile {
         width: 55px;
-        line-height: 55px;
 
         .face {
             font-size: 40px;
@@ -164,11 +168,13 @@ body {
     .spin-in.ng-invisible-remove {
         opacity: 0.0;
         transform: scale(2.0);
+        -webkit-transform: scale(2.0);
     }
 
     .spin-in.ng-invisible-remove-active {
         opacity: 1.0;
         transform: scale(1.0);
+        -webkit-transform: scale(1.0);
     }
 
     #result {
