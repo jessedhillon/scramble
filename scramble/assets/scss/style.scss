@@ -130,3 +130,39 @@ body {
     opacity: 0.0;
     transform: scale(8.0);
 }
+
+@media (max-width: 768px) {
+    .tile {
+        width: 55px;
+        line-height: 55px;
+
+        .face {
+            font-size: 40px;
+        }
+    }
+
+    .board {
+        height: 55px;
+    }
+
+    .spin-in.ng-invisible-remove {
+        opacity: 0.0;
+        transform: scale(2.0);
+    }
+
+    .spin-in.ng-invisible-remove-active {
+        opacity: 1.0;
+        transform: scale(1.0);
+    }
+
+    #result {
+        .icon {
+            .thumbsup {
+                display: inline-block;
+                position: relative;
+                left: -3px;
+                top: -1px;
+            }
+        }
+    }
+}

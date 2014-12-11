@@ -2,7 +2,9 @@
 <html lang="en" ng-app="{% block ng_app %}scramble{% endblock ng_app %}">
     <head>
         <title>{% block title %}{% endblock title %}</title>
-        <meta charset="utf-8"/>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,user-scalable=no">
+
         <link rel="stylesheet" type="text/css" href="{{ 'scramble:static/css/bootstrap.css' | static_url }}">
         <link rel="stylesheet" type="text/css" href="{{ 'css' | route_url(css_path='style') }}">
         {% block style %}{% endblock style %}

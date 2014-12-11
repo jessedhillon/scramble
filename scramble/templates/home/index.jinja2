@@ -6,7 +6,9 @@
     <div ng-controller="ScrambleController" id="main">
         <board id="board" word="word" on-ready="onReady()" on-complete="onComplete()" on-error="onError()"></board>
         <section id="result">
-            <h1 class="correct icon ng-invisible spin-in blow-out" ng-visible="isCorrect">&#x1f44d;</h1>
+            <h1 class="correct icon ng-invisible spin-in blow-out" ng-visible="isCorrect">
+                <span class="thumbsup">&#x1f44d;</span>
+            </h1>
         </section>
     </div>
 {% endblock content %}
