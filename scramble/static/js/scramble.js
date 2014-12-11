@@ -85,11 +85,19 @@ function ScrambleController($rootScope, $scope, $document, $timeout, Dictionary)
 scramble.directive('tile', function() {
     return {
         restrict: 'E',
-        template: '<div class="tile" ng-class="{placed: placed, unplaced: !placed}">' +
+        template: '<div class="tile" ng-class="{placed: placed, unplaced: !placed}" ng-click="onClick($ev)">' +
                       '<span class="face">{{ letter }}</span></div>',
+        require: '^board',
         scope: {
             letter: '=',
             placed: '='
+        },
+        link: function($scope, $element, $attrs, $board) {
+            function onClick($ev) {
+                $board.handleTileClick($scope, $element);
+            }
+
+            $scope.onClick = onClick;
         }
     };
 });
@@ -117,7 +125,7 @@ scramble.directive('board', ["$timeout", function($timeout) {
             $scope.$watch('word', function(w, old) {
                 if(w) {
                     _word = $scope.word.toUpperCase();
-                    reset();
+                    reset(true);
                 }
             });
 
@@ -159,8 +167,17 @@ scramble.directive('board', ["$timeout", function($timeout) {
                 }
             }
 
-            function reset() {
-                $scope.tiles = _word.split('').shuffle().map(makeTile);
+            function reset(shuffle) {
+                if(shuffle) {
+                    var letters = _word.split('');
+                    letters = letters.shuffle();
+                    $scope.tiles = letters.map(makeTile);
+                } else {
+                    $scope.tiles.map(function(t) {
+                        t.placed = false;
+                    });
+                }
+
                 $scope.attempts = [];
                 $scope.onReady();
             }
@@ -198,6 +215,74 @@ scramble.directive('board', ["$timeout", function($timeout) {
             });
 
             $scope.isUnplaced = isUnplaced;
-        }
+            $scope.validateAttempt = validateAttempt;
+        },
+        controller: ['$scope', function($scope) {
+            function getIndexByElementClassName(target, className) {
+                var board = target.parent();
+                var tiles = board.children();
+
+                var j = 0;
+                for(var i = 0; i < tiles.length; i++) {
+                    var el = angular.element(tiles[i]);
+
+                    if(el.find('div').hasClass(className)) {
+                        if(el[0] == target[0]) {
+                            return j;
+                        }
+                        j++;
+                    }
+                }
+
+                return -1;
+            }
+
+            function getUnplacedIndexByElement(target) {
+                return getIndexByElementClassName(target, 'unplaced');
+            }
+
+            function getPlacedIndexByElement(target) {
+                return getIndexByElementClassName(target, 'placed');
+            }
+
+            function guessTileByClick(tileIndex) {
+                var unplaced = $scope.tiles.filter($scope.isUnplaced);
+                var t = unplaced[tileIndex];
+
+                if(!t.placed) {
+                    t.placed = true;
+                    $scope.attempts.push(t);
+                }
+
+                $scope.validateAttempt();
+            }
+
+            function eraseTileByClick(tileIndex) {
+                var t = $scope.attempts.splice(tileIndex, 1)[0];
+                var index = $scope.tiles.indexOf(t);
+                $scope.tiles[index].placed = false;
+            }
+
+            // this logic is highly coupled
+            this.handleTileClick = function(tileScope, element) {
+                var tileEl = element.find('div');
+
+                if(tileEl.hasClass('unplaced')) {
+                    var index = getUnplacedIndexByElement(element);
+
+                    if(index >= 0) {
+                        guessTileByClick(index);
+                    }
+                } else if(tileEl.hasClass('placed')) {
+                    var index = getPlacedIndexByElement(element);
+
+                    if(index >= 0) {
+                        eraseTileByClick(index);
+                    }
+                } else {
+                    console.log("how did this happen!? :wq");
+                }
+            };
+        }]
     };
 }]);
